@@ -1,6 +1,6 @@
-# Ansible <!-- this role name --> role
+# Ansible systemd_services role
 
-This is an [Ansible](http://www.ansible.com) role which <!-- brief description of the role goes here -->.
+This is an [Ansible](http://www.ansible.com) role which manages services through the systemd module.
 
 ## Requirements
 
@@ -10,15 +10,7 @@ This is an [Ansible](http://www.ansible.com) role which <!-- brief description o
 
 ## Role Variables
 
-<!-- A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well. For example: -->
-
 A list of all the default variables for this role is available in `defaults/main.yml`.
-
-The role also setups the following facts:
-
-- `thisrole_fact1`: description of the fact
-- `thisrole_fact2`: description of the fact
-- `thisrole_factN`: description of the fact
 
 ## Filters
 
