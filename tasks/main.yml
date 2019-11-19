@@ -1,2 +1,58 @@
 ---
 # Role tasks
+
+- block:
+    - name: Setup services
+      systemd:
+        daemon_reexec: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        daemon_reload: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        enabled: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        force: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        masked: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        name: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        no_block: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        scope: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        state: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+        user: >-
+          {{ systemd_services_service_item.arguments
+             | default(systemd_services_defaults.arguments)
+             | default(omit) }}
+      when: systemd_services_service_item.name in ansible_facts.systemd_services.keys() | list
+      loop: "{{ systemd_services_to_manage }}"
+      loop_control:
+        loop_var: systemd_services_service_item
+        label: "{{ systemd_services_service_item.name }}"
+      vars:
+        systemd_services_to_manage: >-
+          {{ systemd_services
+             + ((systemd_services_load_from_hostvars)
+                | ternary(systemd_services_hostvars | default([]) | flatten, [])) }}
+  tags:
+  - role::systemd_services
