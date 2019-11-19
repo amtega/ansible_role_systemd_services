@@ -29,17 +29,17 @@ dependencies:
         fedora: 28
         rhel: 7
     tags:
-      - role::services
+      - role::systemd_services
 
   - role: amtega.select_hostvars
     vars:
       select_hostvars_query:
-        pattern: "^services_.*"
-        exclude_pattern: "^services_defaults$"
+        pattern: "^systemd_services_.*"
+        exclude_pattern: "^systemd_services_defaults$"
         attributes:
           - name
-        fact_name: services_hostvars
+        fact_name: systemd_services_hostvars
         output_type: list
-    when: services_load_from_hostvars
+    when: systemd_services_load_from_hostvars
     tags:
-      - role::services
+      - role::systemd_services
