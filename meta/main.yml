@@ -14,32 +14,18 @@ galaxy_info:
         - 7
     - name: Fedora
       versions:
-        - 28
         - 29
         - 30
+        - 31
   galaxy_tags:
     - system
     - services
 
 dependencies:
   - role: amtega.check_platform
-    vars:
-      check_platform_distributions:
-        centos: 7
-        fedora: 28
-        rhel: 7
     tags:
-      - role::systemd_services
+      - never
 
   - role: amtega.select_hostvars
-    vars:
-      select_hostvars_query:
-        pattern: "^systemd_services_.*"
-        exclude_pattern: "^systemd_services_defaults$"
-        attributes:
-          - name
-        fact_name: systemd_services_hostvars
-        output_type: list
-    when: systemd_services_load_from_hostvars
     tags:
-      - role::systemd_services
+      - never
