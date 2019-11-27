@@ -26,46 +26,45 @@
     - name: Setup services
       systemd:
         daemon_reexec: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.daemon_reexec
+             | default(systemd_services_defaults.daemon_reexec)
              | default(omit) }}
         daemon_reload: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.daemon_reload
+             | default(systemd_services_defaults.daemon_reload)
              | default(omit) }}
         enabled: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.enabled
+             | default(systemd_services_defaults.enabled)
              | default(omit) }}
         force: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.force
+             | default(systemd_services_defaults.force)
              | default(omit) }}
         masked: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.masked
+             | default(systemd_services_defaults.masked)
              | default(omit) }}
         name: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.name
+             | default(systemd_services_defaults.name)
              | default(omit) }}
         no_block: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.no_block
+             | default(systemd_services_defaults.no_block)
              | default(omit) }}
         scope: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.scope
+             | default(systemd_services_defaults.scope)
              | default(omit) }}
         state: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.state
+             | default(systemd_services_defaults.state)
              | default(omit) }}
         user: >-
-          {{ systemd_services_service_item.arguments
-             | default(systemd_services_defaults.arguments)
+          {{ systemd_services_service_item.user
+             | default(systemd_services_defaults.user)
              | default(omit) }}
-      when: systemd_services_service_item.name in ansible_facts.systemd_services.keys() | list
       loop: "{{ systemd_services_to_manage }}"
       loop_control:
         loop_var: systemd_services_service_item
@@ -74,6 +73,9 @@
         systemd_services_to_manage: >-
           {{ systemd_services
              + ((systemd_services_load_from_hostvars)
-                | ternary(systemd_services_hostvars | default([]) | flatten, [])) }}
+                | ternary(systemd_services_hostvars
+                | default([])
+                | flatten,
+                [])) }}
   tags:
   - role::systemd_services
