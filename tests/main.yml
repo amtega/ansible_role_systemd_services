@@ -1,2 +1,92 @@
 ---
 # Tasks for testing role
+
+- name: Run idempotence test
+  hosts: localhost
+  roles:
+    - role: amtega.docker_presets
+      docker_presets_images_json_query: >-
+        [? starts_with(name, `centos-7`)
+           || starts_with(name, `fedora-27`)
+           || starts_with(name, `fedora-28`)
+           || starts_with(name, `fedora-29`) ]
+
+    - role: amtega.docker_sandbox
+      docker_sandbox_state: started
+  tags:
+    - sandbox
+
+- name: Prepare docker containers for test
+  hosts: docker_sandbox_containers
+  tasks:
+    - name: Setup extra services
+      set_fact:
+        systemd_services_extra:
+          - name: foo2
+            state: started
+          - name: foo3
+            state: started
+  tags:
+    - idempotence
+
+- name: Test systemd_services role
+  hosts: docker_sandbox_containers
+  tasks:
+    - name: Tests setup - add service script
+      template:
+        src: foo.py.j2
+        dest: "/usr/bin/foo{{ test_systemd_services_service_item }}.py"
+        mode: "a+x"
+      loop: "{{ range(4) | list }}"
+      loop_control:
+        loop_var: test_systemd_services_service_item
+
+    - name: Tests setup - add systemd service config
+      template:
+        src: foo.service.j2
+        dest: >-
+          /usr/lib/systemd/system/foo{{ test_systemd_services_service_item }}.service
+      when: ansible_facts.distribution_major_version is version("6", ">")
+      loop: "{{ range(4) | list }}"
+      loop_control:
+        loop_var: test_systemd_services_service_item
+
+    - name: Add systemd services
+      vars:
+        systemd_services:
+          - name: foo0
+          - name: foo1
+        systemd_services_defaults:
+          state: started
+          enabled: yes
+          systemd_services_load_from_hostvars: yes
+      include_role:
+        name: amtega.systemd_services
+
+    - name: Populate service facts
+      service_facts:
+
+    - name: Check services from systemd_services
+      assert:
+        that:
+          - "'running' == ansible_facts.services[item + '.service'].state"
+        fail_msg: "{{ item }} service not running"
+        success_msg: "{{ item }} service running OK"
+      when: ansible_facts.distribution_major_version is version("6", ">")
+      loop:
+        - foo0
+        - foo1
+        # - foo2
+        # - foo3
+
+  tags:
+    - idempotence
+
+- name: Cleanup docker docker sandbox
+  hosts: localhost
+  roles:
+    - role: amtega.docker_sandbox
+      docker_sandbox_state: absent
+  tags:
+    - cleanup
+    - sandbox
