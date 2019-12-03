@@ -1,0 +1,7 @@
+[Unit]
+Description=Example foo{{ test_systemd_services_service_item }} service
+[Service]
+ExecStart=/usr/bin/python2 /usr/bin/foo{{ test_systemd_services_service_item }}.py
+User=root
+[Install]
+WantedBy=multi-user.target

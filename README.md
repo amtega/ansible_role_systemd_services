@@ -1,6 +1,6 @@
-# Ansible <!-- this role name --> role
+# Ansible systemd_services role
 
-This is an [Ansible](http://www.ansible.com) role which <!-- brief description of the role goes here -->.
+This is an [Ansible](http://www.ansible.com) role which manages services through the systemd module.
 
 ## Requirements
 
@@ -10,45 +10,7 @@ This is an [Ansible](http://www.ansible.com) role which <!-- brief description o
 
 ## Role Variables
 
-<!-- A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well. For example: -->
-
 A list of all the default variables for this role is available in `defaults/main.yml`.
-
-The role also setups the following facts:
-
-- `thisrole_fact1`: description of the fact
-- `thisrole_fact2`: description of the fact
-- `thisrole_factN`: description of the fact
-
-## Filters
-
-<!-- A description of the filters provided by the role should go here. For example: -->
-
-The role provides these filters:
-
-- `thisrole_filter1`: description of the filter
-- `thisrole_filter2`: description of the filter
-- `thisrole_filterN`: description of the filter
-
-## Modules
-
-<!-- A description of the modules provided by the role should go here. For example: -->
-
-The role provides these modules:
-
-- `thisrole_module1`: description of the module
-- `thisrole_module2`: description of the module
-- `thisrole_moduleN`: description of the module
-
-## Tests
-
-<!-- A description of the tests provided by the role should go here. For example: -->
-
-The role provides these tests:
-
-- `thisrole_test1`: description of the test
-- `thisrole_test2`: description of the test
-- `thisrole_testN`: description of the test
 
 ## Dependencies
 
@@ -60,24 +22,24 @@ The role provides these tests:
 
 ## Usage
 
-<!-- Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too. For example: -->
-
 This is an example playbook:
 
 ```yaml
 ---
 
-- hosts: all
-  roles:
-    - role: thisrole
-      thisrole_var1: value1
-      thisrole_var2: value2
-      thisrole_varN: valuen
+  - hosts: all
+    roles:
+      - role: amtega.systemd_services
+        vars:
+          services:
+            - name: postfix
+            - name: httpd
+
+          services_defaults:
+            state: started
 ```
 
 ## Testing
-
-<!-- A description of how to run tests of the role if available. For example: -->
 
 Tests are based on docker containers. You can setup docker engine quickly using the playbook `files/setup.yml` available in the role [amtega.docker_engine](https://galaxy.ansible.com/amtega/docker_engine).
 
@@ -90,7 +52,7 @@ $ ansible-playbook main.yml
 
 ## License
 
-Copyright (C) <!-- YEAR --> AMTEGA - Xunta de Galicia
+Copyright (C) 2019 AMTEGA - Xunta de Galicia
 
 This role is free software: you can redistribute it and/or modify it under the terms of:
 
@@ -100,6 +62,5 @@ This role is distributed in the hope that it will be useful, but WITHOUT ANY WAR
 
 ## Author Information
 
-- <!-- author _name 1 -->.
-- <!-- author _name 2 -->.
-- <!-- author _name N -->.
+Based on amtega.services role
+- Daniel Sánchez Fábregas
