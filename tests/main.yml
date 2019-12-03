@@ -7,9 +7,8 @@
     - role: amtega.docker_presets
       docker_presets_images_json_query: >-
         [? starts_with(name, `centos-7`)
-           || starts_with(name, `fedora-27`)
-           || starts_with(name, `fedora-28`)
-           || starts_with(name, `fedora-29`) ]
+           || starts_with(name, `fedora-29`)
+           || starts_with(name, `fedora-30`) ]
 
     - role: amtega.docker_sandbox
       docker_sandbox_state: started
@@ -19,6 +18,11 @@
 - name: Prepare docker containers for test
   hosts: docker_sandbox_containers
   tasks:
+    - name: Setup required packages
+      package:
+        name: python2
+        state: present
+
     - name: Setup extra services
       set_fact:
         systemd_services_extra:
@@ -76,9 +80,6 @@
       loop:
         - foo0
         - foo1
-        # - foo2
-        # - foo3
-
   tags:
     - idempotence
 

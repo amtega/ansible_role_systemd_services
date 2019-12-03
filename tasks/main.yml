@@ -6,7 +6,7 @@
   vars:
     check_platform_distributions:
       centos: 7
-      fedora: 27
+      fedora: 29
       rhel: 7
 
 - include_role:
@@ -20,7 +20,6 @@
       fact_name: systemd_services_hostvars
       output_type: list
   when: systemd_services_load_from_hostvars | bool
-
 
 - block:
     - name: Setup services
@@ -78,4 +77,4 @@
                 | flatten,
                 [])) }}
   tags:
-  - role::systemd_services
+    - role::systemd_services
