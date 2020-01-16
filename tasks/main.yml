@@ -1,27 +1,10 @@
 ---
 # Role tasks
 
-- include_role:
-    name: amtega.check_platform
-  vars:
-    check_platform_distributions:
-      centos: 7
-      fedora: 29
-      rhel: 7
-
-- include_role:
-    name: amtega.select_hostvars
-  vars:
-    select_hostvars_query:
-      pattern: "^systemd_services_.*"
-      exclude_pattern: "^systemd_services_defaults$"
-      attributes:
-        - name
-      fact_name: systemd_services_hostvars
-      output_type: list
-  when: systemd_services_load_from_hostvars | bool
-
 - block:
+    - name: Gather services facts
+      service_facts:
+
     - name: Setup services
       systemd:
         daemon_reexec: >-
@@ -64,6 +47,11 @@
           {{ systemd_services_service_item.user
              | default(systemd_services_defaults.user)
              | default(omit) }}
+      when: >-
+        systemd_services_service_item.name
+        in ansible_facts.services.keys() | list
+        or systemd_services_service_item.name + ".service"
+           in ansible_facts.services.keys() | list
       loop: "{{ systemd_services_to_manage }}"
       loop_control:
         loop_var: systemd_services_service_item
