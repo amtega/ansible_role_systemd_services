@@ -1,7 +1,11 @@
 [Unit]
 Description=Example foo{{ test_systemd_services_service_item }} service
 [Service]
+{% if ansible_facts.distribution_major_version is version("8", "<") %}
 ExecStart=/usr/bin/python2 /usr/bin/foo{{ test_systemd_services_service_item }}.py
+{% else %}
+ExecStart=/usr/bin/python3 /usr/bin/foo{{ test_systemd_services_service_item }}.py
+{% endif %}
 User=root
 [Install]
 WantedBy=multi-user.target

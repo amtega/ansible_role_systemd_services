@@ -1,0 +1,20 @@
+---
+
+- name: Verify
+  hosts: molecule_hosts
+  gather_facts: yes
+  tasks:
+    - name: Populate service facts
+      service_facts:
+
+    - name: Check services from systemd_services
+      assert:
+        quiet: yes
+        that:
+          - "'running' == ansible_facts.services[item + '.service'].state"
+        fail_msg: "{{ item }} service not running"
+        success_msg: "{{ item }} service running OK"
+      when: ansible_facts.distribution_major_version is version("6", ">")
+      loop:
+        - foo0
+        - foo1

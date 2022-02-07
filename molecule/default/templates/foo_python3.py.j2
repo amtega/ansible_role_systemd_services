@@ -1,0 +1,16 @@
+#!/usr/bin/env python2
+
+# {{ ansible_managed | comment }}
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+PORT = 8000 + {{ test_systemd_services_service_item }}
+
+def run_while_true(server_class=HTTPServer,
+                   handler_class=BaseHTTPRequestHandler):
+    server_address = ('', PORT)
+    httpd = server_class(server_address, handler_class)
+    while True:
+        httpd.handle_request()
+
+run_while_true()

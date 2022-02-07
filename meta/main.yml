@@ -3,19 +3,21 @@
 
 galaxy_info:
   role_name: systemd_services
+  namespace: amtega
   author: Daniel Sánchez Fábregas
   description: Manage services through the systemd module
   company: AMTEGA - Xunta de Galicia
   license: GPLv3 or EUPL
-  min_ansible_version: 2.9
+  min_ansible_version: 2.10
   platforms:
     - name: EL
       versions:
         - 7
+        - 8
     - name: Fedora
       versions:
-        - 29
-        - 30
+        - 34
+        - 35
   galaxy_tags:
     - system
     - services
@@ -25,7 +27,7 @@ dependencies:
     vars:
       check_platform_distributions:
         centos: 7
-        fedora: 29
+        fedora: 34
         redhat: 7
 
   - role: amtega.select_hostvars
