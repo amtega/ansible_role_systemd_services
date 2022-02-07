@@ -1,0 +1,30 @@
+---
+
+- name: Prepare
+  hosts: molecule_hosts
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: Setup service script
+      template:
+        src: >-
+          {{ ansible_facts.distribution_major_version is version("8", "<")
+             | ternary("foo_python2.py.j2", "foo_python3.py.j2") }}
+        dest: "/usr/bin/foo{{ test_systemd_services_service_item }}.py"
+        mode: "a+x"
+      loop: "{{ range(4) | list }}"
+      loop_control:
+        loop_var: test_systemd_services_service_item
+
+    - name: Setup systemd service config
+      template:
+        src: foo.service.j2
+        dest: >-
+          {{ "/usr/lib/systemd/system/foo"
+             ~ test_systemd_services_service_item
+             ~ ".service" }}
+        mode: 0644
+      when: ansible_facts.distribution_major_version is version("6", ">")
+      loop: "{{ range(4) | list }}"
+      loop_control:
+        loop_var: test_systemd_services_service_item
