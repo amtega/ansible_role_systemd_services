@@ -1,0 +1,96 @@
+---
+
+dependency:
+  name: galaxy
+  enabled: yes
+  options:
+    ignore-certs: yes
+    ignore-errors: yes
+    role-file: "${MOLECULE_SCENARIO_DIRECTORY}/requirements.yml"
+    requirements-file: "${MOLECULE_SCENARIO_DIRECTORY}/requirements.yml"
+driver:
+  name: docker
+lint: "${MOLECULE_SCENARIO_DIRECTORY}/linters.sh"
+platforms:  
+  - name: "centos7-${INSTANCE_UUID:-1}"
+    image: quay.io/centos/centos:centos7
+    dockerfile: Dockerfile.systemd.j2
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - molecule_hosts
+      - molecule_hosts_centos
+      - molecule_hosts_centos_7
+  - name: "centos8-${INSTANCE_UUID:-1}"
+    image: quay.io/centos/centos:stream8
+    dockerfile: Dockerfile.systemd.j2
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - molecule_hosts
+      - molecule_hosts_centos
+      - molecule_hosts_centos_8
+  - name: "fedora34-${INSTANCE_UUID:-1}"
+    image: quay.io/fedora/fedora:34
+    dockerfile: Dockerfile.systemd.j2
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - molecule_hosts
+      - molecule_hosts_fedora
+      - molecule_hosts_fedora_34
+  - name: "fedora35-${INSTANCE_UUID:-1}"
+    image: quay.io/fedora/fedora:35
+    dockerfile: Dockerfile.systemd.j2
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - molecule_hosts
+      - molecule_hosts_fedora
+      - molecule_hosts_fedora_35
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      callbacks_enabled: profile_tasks
+      action_plugins: $PWD/action_plugins
+  inventory:
+    hosts:
+      molecule_hosts:
+        vars:
+          systemd_services_load_from_hostvars: yes
+
+          systemd_services:
+            - name: foo0
+            - name: foo1
+
+          systemd_services_defaults:
+            state: started
+            enabled: yes
+
+          systemd_services_extra:
+            - name: foo2
+              state: started
+            - name: foo3
+              state: started
+      molecule_hosts_fedora:
+        vars:
+          ansible_python_interpreter: /usr/bin/python3
+verifier:
+  name: ansible
