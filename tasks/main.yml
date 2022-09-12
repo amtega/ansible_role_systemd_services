@@ -1,12 +1,12 @@
 ---
-# Role tasks
 
-- block:
+- name: Setup systemd services
+  block:
     - name: Gather services facts
-      service_facts:
+      ansible.builtin.service_facts:
 
     - name: Setup services
-      systemd:
+      ansible.builtin.systemd:
         daemon_reexec: >-
           {{ systemd_services_service_item.daemon_reexec
              | default(systemd_services_defaults.daemon_reexec)

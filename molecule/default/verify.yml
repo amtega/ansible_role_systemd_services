@@ -5,10 +5,10 @@
   gather_facts: yes
   tasks:
     - name: Populate service facts
-      service_facts:
+      ansible.builtin.service_facts:
 
     - name: Check services from systemd_services
-      assert:
+      ansible.builtin.assert:
         quiet: yes
         that:
           - "'running' == ansible_facts.services[item + '.service'].state"

@@ -6,7 +6,7 @@
   become: yes
   tasks:
     - name: Setup service script
-      template:
+      ansible.builtin.template:
         src: >-
           {{ ansible_facts.distribution_major_version is version("8", "<")
              | ternary("foo_python2.py.j2", "foo_python3.py.j2") }}
@@ -17,7 +17,7 @@
         loop_var: test_systemd_services_service_item
 
     - name: Setup systemd service config
-      template:
+      ansible.builtin.template:
         src: foo.service.j2
         dest: >-
           {{ "/usr/lib/systemd/system/foo"
